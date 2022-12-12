@@ -1,0 +1,75 @@
+import java.util.*;
+
+public class Main {
+    void div(int a[], int k, int gp[], int n) {
+        // int gp[] = { 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+        int count = 0;
+        for (int i = 0; i < k; i++) {
+            if (a[i] == gp[0]) {
+                for (int j = i; j < n + i; j++) {
+                    a[j] = a[j] ^ gp[count++];
+                }
+                count = 0;
+            }
+        }
+    }
+
+    public static void main(String args[]) {
+        int a[] = new int[100];
+        int b[] = new int[100];
+        int gp[] = new int[100];
+        int len, k, n;
+        Scanner sc = new Scanner(System.in);
+        Main ob = new Main();
+        System.out.println("Enter no of bits");
+        n = sc.nextInt();
+        System.out.println("Enter generated polynomial");
+        for (int i = 0; i < n; i++) {
+            gp[i] = sc.nextInt();
+        }
+        System.out.println("Enter the length of Data Frame:");
+        len = sc.nextInt();
+        int flag = 0;
+        System.out.println("Enter the Message:");
+        for (int i = 0; i < len; i++) {
+            a[i] = sc.nextInt();
+        }
+        for (int i = 0; i < n; i++) {
+            a[len++] = 0;
+        }
+        k = len - n;
+        for (int i = 0; i < len; i++) {
+            b[i] = a[i];
+        }
+        ob.div(a, k, gp, n);
+        int temp[] = new int[len];
+        for (int i = 0; i < len; i++) {
+            a[i] = a[i] ^ b[i];
+            temp[i] = a[i];
+        }
+        int t = -1;
+        System.out.println("Data to be transmitted: ");
+        for (int i = 0; i < len - 1; i++) {
+            System.out.print(a[i] + " ");
+        }
+        System.out.println();
+        System.out.println("Enter the Reveived Data: ");
+        for (int i = 0; i < len - 1; i++) {
+            a[i] = sc.nextInt();
+            if (a[i] != temp[i])
+                t = i;
+        }
+        ob.div(a, k, gp, n);
+        for (int i = 0; i < len; i++) {
+            if (a[i] != 0) {
+                flag = 1;
+                break;
+            }
+        }
+        if (flag == 1) {
+            System.out.println("error in data");
+            System.out.println("Error occured at position " + (t + 1) + " position ");
+        } else
+            System.out.println("no error");
+    }
+}
